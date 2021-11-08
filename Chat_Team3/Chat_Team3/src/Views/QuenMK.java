@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package messengerapp;
+package Views;
 
 import java.awt.Color;
 /**
@@ -53,15 +53,15 @@ public class QuenMK extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(0, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(620, 322));
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/telegram-icon.png"))); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Hinh/telegram-icon.png"))); // NOI18N
         jButton1.setText("Xác nhận");
 
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/customer-service-icon (2).png"))); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Hinh/customer-service-icon (2).png"))); // NOI18N
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/arrow-back-icon.png"))); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Hinh/arrow-back-icon.png"))); // NOI18N
         jButton2.setText("Quay lại");
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/Actions-help-about-icon.png"))); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Hinh/Actions-help-about-icon.png"))); // NOI18N
         jButton3.setText("Trợ giúp");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 28)); // NOI18N

@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.Box;
 import utils.Auth;
 import utils.MsgBox;
+import utils.XImage;
 
 /**
  *
@@ -34,6 +35,8 @@ public class AddFriend extends javax.swing.JDialog {
         setTitle("Thêm bạn");
         this.parent = parent;
         setLocationRelativeTo(parent);
+        setIconImage(XImage.getAppIcon());
+
     }
 
     public void add_room(String avatar, String name, String nick_name) {

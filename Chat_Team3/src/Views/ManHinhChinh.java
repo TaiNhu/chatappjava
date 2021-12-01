@@ -63,6 +63,8 @@ public class ManHinhChinh extends javax.swing.JFrame {
 
     public ManHinhChinh() throws IOException {
         initComponents();
+        setIconImage(XImage.getAppIcon());
+        setTitle("BeeChat");
         jButton3.getInputMap(JButton.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "jButton3");
         jButton3.getActionMap().put("jButton3", new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
@@ -351,6 +353,11 @@ public class ManHinhChinh extends javax.swing.JFrame {
         });
 
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Hinh/Log-Out-icon.png"))); // NOI18N
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -721,6 +728,11 @@ public class ManHinhChinh extends javax.swing.JFrame {
             }).start();
         }
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        this.setVisible(false);
+        new Dangnhap(this, true).setVisible(true);        
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments

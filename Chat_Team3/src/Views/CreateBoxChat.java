@@ -34,16 +34,17 @@ public class CreateBoxChat extends javax.swing.JDialog {
      * Creates new form CreateBoxChat
      */
     ManHinhChinh parent;
-    
+
     public CreateBoxChat(ManHinhChinh parent, boolean modal) throws IOException {
         super(parent, modal);
         initComponents();
         setTitle("Tạo nhóm");
+        setIconImage(XImage.getAppIcon());
         setLocationRelativeTo(parent);
         this.parent = parent;
         Auth.trungGiang.add(Auth.user.getUser_name());
         Auth.client.selectAllFriend(Auth.user.getUser_name());
-        while(parent.selectAllFriend.isEmpty()){
+        while (parent.selectAllFriend.isEmpty()) {
             System.out.print("");
         }
         List<User> list = parent.selectAllFriend;

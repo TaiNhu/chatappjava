@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 import utils.Auth;
 import utils.Client;
+import utils.XImage;
 
 /**
  *
@@ -24,6 +25,8 @@ public class ChaoJDialog extends javax.swing.JDialog {
     void openDangNhap() {
         this.dispose();
         new Dangnhap(null, false).setVisible(true);
+        setIconImage(XImage.getAppIcon());
+        setTitle("BeeChat");
     }
 
     /**

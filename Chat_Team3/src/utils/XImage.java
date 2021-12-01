@@ -26,7 +26,7 @@ import javax.swing.ImageIcon;
 public class XImage {
     
     public static Image getAppIcon(){
-        Image icon = Toolkit.getDefaultToolkit().getImage(".\\images\\Poly.jpg");
+        Image icon = Toolkit.getDefaultToolkit().getImage(".\\logos\\logo_Bee.png");
         return icon;
     }
     

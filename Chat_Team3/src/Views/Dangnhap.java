@@ -29,6 +29,8 @@ public class Dangnhap extends javax.swing.JDialog {
     public Dangnhap(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setIconImage(XImage.getAppIcon());
+        setTitle("Đăng nhập");
         txtMatkhau.setEchoChar((char) 0);
         addWindowListener(new java.awt.event.WindowAdapter() {
 

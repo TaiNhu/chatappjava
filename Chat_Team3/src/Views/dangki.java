@@ -44,6 +44,8 @@ public class dangki extends javax.swing.JDialog {
      */
     public dangki(java.awt.Frame parent, boolean modal) throws IOException {
         super(parent, modal);
+        setIconImage(XImage.getAppIcon());
+        setTitle("Đăng ký");
         this.data = Files.readAllBytes(Paths.get(".\\src\\hinh\\Capture.JPG"));
         addWindowListener(new java.awt.event.WindowAdapter() {
 
@@ -226,7 +228,7 @@ public class dangki extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(260, 260, 260)
+                .addGap(308, 308, 308)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -282,7 +284,7 @@ public class dangki extends javax.swing.JDialog {
         });
 
         btndangki.setIcon(new javax.swing.ImageIcon(getClass().getResource("/hinh/sign-check-icon.png"))); // NOI18N
-        btndangki.setText("đăng ký");
+        btndangki.setText("Đăng ký");
         btndangki.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btndangkiActionPerformed(evt);
@@ -290,7 +292,7 @@ public class dangki extends javax.swing.JDialog {
         });
 
         btnguima.setIcon(new javax.swing.ImageIcon(getClass().getResource("/hinh/Actions-document-save-icon.png"))); // NOI18N
-        btnguima.setText("gửi mã");
+        btnguima.setText("Gửi mã");
         btnguima.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnguimaActionPerformed(evt);

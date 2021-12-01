@@ -16,6 +16,7 @@ import javax.mail.internet.MimeMessage;
 import javax.swing.JOptionPane;
 import utils.Auth;
 import utils.MsgBox;
+import utils.XImage;
 /**
  *
  * @author ntc10
@@ -27,6 +28,8 @@ public class QuenMK extends javax.swing.JFrame {
      */
     public QuenMK() {
         initComponents();
+        setIconImage(XImage.getAppIcon());
+        setTitle("Quên mật khẩu");
         addWindowListener(new java.awt.event.WindowAdapter() {
 
             public void windowClosing(WindowEvent winEvt) {

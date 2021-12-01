@@ -35,6 +35,8 @@ public class thongtintaikhoan extends javax.swing.JDialog {
      */
     public thongtintaikhoan(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        setIconImage(XImage.getAppIcon());
+        setTitle("Tài Khoản");
         try {
             initComponents();
             txthoten.setEnabled(false);

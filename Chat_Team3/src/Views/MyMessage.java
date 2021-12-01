@@ -40,7 +40,7 @@ public class MyMessage extends javax.swing.JPanel {
     public javax.swing.JProgressBar jProgressBar1;
     ManHinhChinh parent;
 
-    public MyMessage(int id, String message, int id_category, String owner, String avatar, ManHinhChinh parent) {
+    public MyMessage(int id, String message, int id_category, String owner, byte[] avatar, ManHinhChinh parent) {
         initComponents();
         this.parent = parent;
         this.id = id;
@@ -91,10 +91,12 @@ public class MyMessage extends javax.swing.JPanel {
         } else if (this.id_category == 1) {
             convert_string(message);
         }
-        jLabel1.setIcon(new ImageIcon(XImage.read(avatar, 50, 50)));
+        ImageIcon image = new ImageIcon(avatar);
+        ImageIcon i = new ImageIcon(image.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        jLabel1.setIcon(i);
     }
 
-    public MyMessage(int id, String message, int id_category, String owner, String avatar, ManHinhChinh parent, String anh) {
+    public MyMessage(int id, String message, int id_category, String owner, byte[] avatar, ManHinhChinh parent, String anh) {
         initComponents();
         this.parent = parent;
         this.id = id;
@@ -124,7 +126,9 @@ public class MyMessage extends javax.swing.JPanel {
         } else if (this.id_category == 1) {
             convert_string(message);
         }
-        jLabel1.setIcon(new ImageIcon(XImage.read(avatar, 50, 50)));
+        ImageIcon image = new ImageIcon(avatar);
+        ImageIcon i = new ImageIcon(image.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        jLabel1.setIcon(i);
     }
 
     MyMessage() {

@@ -91,13 +91,13 @@ public class ManHinhChinh extends javax.swing.JFrame {
                     while (is_connected) {
                         header = in.readUTF();
                         if (header.equals("get_messsage")) {
-                            List<Message> m = (List<Message>) in1.readObject();
-                            for (Message j : m) {
+                            List<Object[]> m = (List<Object[]>) in1.readObject();
+                            for (Object[] j : m) {
                                 add_message(j);
                             }
                             JScrollBar vertical = jScrollPane2.getVerticalScrollBar();
                             vertical.setValue(vertical.getMaximum());
-                            last_room_clicked.setMessage(m.get(m.size() - 1).getMessage());
+                            last_room_clicked.setMessage(((Message) m.get(m.size() - 1)[0]).getMessage());
                         } else if (header.equals("add_group")) {
                             List<Object[]> list = (List<Object[]>) in1.readObject();
                             if (list != null) {
@@ -128,8 +128,8 @@ public class ManHinhChinh extends javax.swing.JFrame {
                             while (last_file_send == null) {
                                 System.out.print("");
                             }
-                            List<Message> m = (List<Message>) in1.readObject();
-                            last_file_send.id = m.get(0).getId();
+                            List<Object[]> m = (List<Object[]>) in1.readObject();
+                            last_file_send.id = ((Message) m.get(0)[0]).getId();
                         } else if (header.equals("get_file")) {
                             file_size = in.readUTF();
                             contents = (List<Content>) in1.readObject();
@@ -194,14 +194,15 @@ public class ManHinhChinh extends javax.swing.JFrame {
 //        repaint();
     }
 
-    public void add_message(Message m) {
+    public void add_message(Object[] b) {
         jPanel18.add(Box.createVerticalStrut(10));
         JPanel t = null;
+        Message m = (Message) b[0];
         if (m.getId_room() == last_room_clicked.id) {
             if (m.getOwner().equals(Auth.user.getUser_name())) {
-                t = new MyMessage(m.getId(), m.getMessage(), m.getId_category(), m.getOwner(), "./avatar/avatar.jpg", this);
+                t = new MyMessage(m.getId(), m.getMessage(), m.getId_category(), m.getOwner(), Auth.user.getAvatar(), this);
             } else {
-                t = new YourMessage(m.getId(), m.getMessage(), m.getId_category(), m.getOwner(), "./avatar/" + m.getOwner() + ".jpg", this);
+                t = new YourMessage(m.getId(), m.getMessage(), m.getId_category(), m.getOwner(), ((User) b[1]).getAvatar(), this);
             }
             jPanel18.add(t);
         }
@@ -547,7 +548,7 @@ public class ManHinhChinh extends javax.swing.JFrame {
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 639, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -675,7 +676,7 @@ public class ManHinhChinh extends javax.swing.JFrame {
             v.setId_category(2);
             v.setId(0);
             jPanel18.add(Box.createVerticalStrut(10));
-            MyMessage t = new MyMessage(v.getId(), v.getMessage(), v.getId_category(), v.getOwner(), "./avatar/avatar.jpg", this, FileChooser.getSelectedFile().getAbsolutePath());
+            MyMessage t = new MyMessage(v.getId(), v.getMessage(), v.getId_category(), v.getOwner(), Auth.user.getAvatar(), this, FileChooser.getSelectedFile().getAbsolutePath());
             last_file_send = t;
             jPanel18.add(t);
             jPanel18.repaint();

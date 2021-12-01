@@ -207,13 +207,15 @@ public class Server {
                                             + "where members.id_room = ?\n"
                                             + "order by messages.id desc) a\n"
                                             + "order by id asc;", id_room);
-                                    List<Message> m = new ArrayList<Message>();
+                                    List<Object[]> y = new ArrayList<Object[]>();
                                     while (s.next()) {
-                                        Message g = new Message(s.getInt(1), s.getString(2), s.getInt(3), s.getInt(4), s.getString(5));
-                                        m.add(g);
+                                        Message c = new Message(s.getInt(1), s.getString(2), s.getInt(3), s.getInt(4), s.getString(5));
+                                        User d = new UserDAO().selectById(s.getString(5));
+                                        Object[] ob = {c, d};
+                                        y.add(ob);
                                     }
                                     socket.out.writeUTF("get_messsage");
-                                    socket.out1.writeObject(m);
+                                    socket.out1.writeObject(y);
                                 } else if (header.equals("send_message")) {
                                     Message m = (Message) socket.in1.readObject();
                                     int id_member = (int) XJdbc.value("select id from members where id_room = ? and user_name = ?", m.getId_room(), m.getOwner());
@@ -222,10 +224,12 @@ public class Server {
                                     ResultSet s = XJdbc.query("select top 1 messages.id, messages.message, messages.id_category, members.id_room, members.user_name\n"
                                             + "from messages inner join members on members.id = messages.id_member \n"
                                             + "where members.user_name = ? and id_room = ? order by id desc;", m.getOwner(), m.getId_room());
-                                    List<Message> y = new ArrayList<Message>();
+                                    List<Object[]> y = new ArrayList<Object[]>();
                                     while (s.next()) {
                                         Message c = new Message(s.getInt(1), s.getString(2), s.getInt(3), s.getInt(4), s.getString(5));
-                                        y.add(c);
+                                        User d = new UserDAO().selectById(s.getString(5));
+                                        Object[] ob = {c, d};
+                                        y.add(ob);
                                     }
                                     new Thread(new Runnable() {
                                         @Override
@@ -233,7 +237,6 @@ public class Server {
                                             try {
                                                 List<SocketClone> s = (List<SocketClone>) room.get(m.getId_room());
                                                 for (SocketClone j : s) {
-                                                    y.get(0).getOwner();
                                                     j.out.writeUTF("get_messsage");
                                                     j.out1.writeObject(y);
                                                 }
@@ -259,10 +262,12 @@ public class Server {
                                     ResultSet s = XJdbc.query("select top 1 messages.id, messages.message, messages.id_category, members.id_room, members.user_name\n"
                                             + "from messages inner join members on members.id = messages.id_member \n"
                                             + "where members.user_name = ? and id_room = ? order by id desc;", m.getOwner(), m.getId_room());
-                                    List<Message> y = new ArrayList<Message>();
+                                    List<Object[]> y = new ArrayList<Object[]>();
                                     while (s.next()) {
                                         Message c = new Message(s.getInt(1), s.getString(2), s.getInt(3), s.getInt(4), s.getString(5));
-                                        y.add(c);
+                                        User d = new UserDAO().selectById(s.getString(5));
+                                        Object[] ob = {c, d};
+                                        y.add(ob);
                                     }
                                     new Thread(new Runnable() {
                                         @Override
@@ -271,7 +276,6 @@ public class Server {
                                                 List<SocketClone> s = (List<SocketClone>) room.get(m.getId_room());
                                                 for (SocketClone j : s) {
                                                     if (!j.equals(socket)) {
-                                                        y.get(0).getOwner();
                                                         j.out.writeUTF("get_messsage");
                                                         j.out1.writeObject(y);
                                                     } else {

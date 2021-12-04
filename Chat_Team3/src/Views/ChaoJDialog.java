@@ -25,8 +25,6 @@ public class ChaoJDialog extends javax.swing.JDialog {
     void openDangNhap() {
         this.dispose();
         new Dangnhap(null, false).setVisible(true);
-        setIconImage(XImage.getAppIcon());
-        setTitle("BeeChat");
     }
 
     /**
@@ -35,6 +33,8 @@ public class ChaoJDialog extends javax.swing.JDialog {
     public ChaoJDialog(java.awt.Frame parent, boolean modal) throws IOException {
         super(parent, modal);
         initComponents();
+        setIconImage(XImage.getAppIcon());
+        setTitle("BeeChat");
         Client client = new Client(new Socket("localhost", 10000));
         Auth.setClient(client);
         new Thread(eventProgressBar(), "background").start();

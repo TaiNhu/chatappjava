@@ -39,7 +39,7 @@ public class AddFriend extends javax.swing.JDialog {
 
     }
 
-    public void add_room(String avatar, String name, String nick_name) {
+    public void add_room(byte[] avatar, String name, String nick_name) {
         jPanel3.add(Box.createVerticalStrut(10));
         jPanel3.add(new Friend(avatar, name, nick_name));
         pack();
@@ -150,11 +150,7 @@ public class AddFriend extends javax.swing.JDialog {
             parent.selectByNickName = new ArrayList();
             for (User ob : list) {
                 try {
-                    String path = "./avatar/" + ob.getUser_name() + ".jpg";
-                    File a = new File(path);
-                    a.createNewFile();
-                    Files.write(a.toPath(), (byte[]) ob.getAvatar());
-                    add_room(path, (String) ob.getUser_name(), (String) ob.getNick_name());
+                    add_room(ob.getAvatar(), (String) ob.getUser_name(), (String) ob.getNick_name());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

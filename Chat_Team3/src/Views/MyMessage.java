@@ -291,7 +291,7 @@ public class MyMessage extends javax.swing.JPanel {
                             File file = new File("./" + message);
                             file.createNewFile();
                             FileOutputStream fos = new FileOutputStream(file.getAbsolutePath());
-                            int percent = 100 / (parent.contents.size());
+                            int percent = 100 / (parent.contents.size()) == 0 ? 1 : 100 / (parent.contents.size());
                             for (Content y : parent.contents) {
                                 fos.write(y.getContent());
                                 jProgressBar1.setValue(jProgressBar1.getValue() + percent);

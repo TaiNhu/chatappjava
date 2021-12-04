@@ -24,8 +24,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.KeyStroke;
 import utils.Auth;
+import utils.Client;
 import utils.MsgBox;
 import utils.XImage;
 
@@ -60,6 +63,7 @@ public class ManHinhChinh extends javax.swing.JFrame {
     public MyMessage last_file_send;
     public List<Content> contents = new ArrayList();
     public String file_size;
+    public VideoCall video_call;
 
     public ManHinhChinh() throws IOException {
         initComponents();
@@ -112,11 +116,9 @@ public class ManHinhChinh extends javax.swing.JFrame {
                             Auth.trungGiang.clear();
                         } else if (header.equals("add_friend")) {
                             List<Object[]> list = (List<Object[]>) in1.readObject();
-                            for (int i = 0; i < Auth.trungGian.size() - 1; i += 2) {
-                                if (list != null) {
-                                    for (Object[] ob : list) {
-                                        add_room((byte[]) ob[2], (String) ob[1], (String) ob[3], (int) ob[0]);
-                                    }
+                            if (list != null) {
+                                for (Object[] ob : list) {
+                                    add_room((byte[]) ob[2], (String) ob[1], (String) ob[3], (int) ob[0]);
                                 }
                             }
                             JScrollBar vertical = jScrollPane1.getVerticalScrollBar();
@@ -457,6 +459,11 @@ public class ManHinhChinh extends javax.swing.JFrame {
         jPanel13.add(filler8);
 
         jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Hinh/videocall.png"))); // NOI18N
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
         jPanel13.add(jButton7);
 
         jPanel12.add(jPanel13);
@@ -702,7 +709,7 @@ public class ManHinhChinh extends javax.swing.JFrame {
                         Auth.client.out.writeUTF("send_file");
                         Auth.client.out1.writeObject(m);
                         Auth.client.out.writeUTF(String.valueOf((file.length() / 50000) + 1));
-                        int percent = (int) (100 / ((file.length() / 50000) + 1));
+                        int percent = (int) (100 / ((file.length() / 50000) + 1)) == 0 ? 1 : (int) (100 / ((file.length() / 50000) + 1));
                         t.jProgressBar1.setVisible(true);
                         while ((fileInputStream.read(data)) != -1) {
                             Auth.client.out.write(data);
@@ -731,8 +738,25 @@ public class ManHinhChinh extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         this.setVisible(false);
-        new Dangnhap(this, true).setVisible(true);        
+        new Dangnhap(this, true).setVisible(true);
     }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+        try {
+            Client a = new Client(new Socket("localhost", 11000));
+            HashMap hs = new HashMap();
+            hs.put("header", "connected");
+            hs.put("user_name", Auth.user.getUser_name());
+            hs.put("room", last_room_clicked.id);
+            a.out1.writeObject(hs);
+            VideoCall i = new VideoCall(a, this);
+            i.add_room_video_call(new RoomVideoCall(Auth.user.getUser_name()));
+            i.run_video();
+            i.setVisible(true);
+        } catch (IOException ex) {
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments

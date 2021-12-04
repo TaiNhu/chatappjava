@@ -6,6 +6,7 @@
 package Views;
 
 import java.awt.Color;
+import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import utils.Auth;
@@ -21,18 +22,20 @@ public class Friend extends javax.swing.JPanel {
      * Creates new form Room
      */
     public String user_name;
-    public String avatar;
+    public byte[] avatar;
     public String email;
     public String nick_name;
 
-    public Friend(String avatar, String name, String nick_name) {
+    public Friend(byte[] avatar, String name, String nick_name) {
         super();
         initComponents();
         this.user_name = name;
         this.email = email;
         this.avatar = avatar;
         this.nick_name = nick_name;
-        lblAvatar.setIcon(new ImageIcon(XImage.read(avatar, 50, 50)));
+        ImageIcon image = new ImageIcon(avatar);
+        ImageIcon i = new ImageIcon(image.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        lblAvatar.setIcon(i);
         lblTen.setText(nick_name);
         lblTinNhanCuoi.setText(name);
     }

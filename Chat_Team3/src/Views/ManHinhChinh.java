@@ -744,7 +744,7 @@ public class ManHinhChinh extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
         try {
-            Client a = new Client(new Socket("localhost", 11000));
+            Client a = new Client(new Socket("14.183.98.48", 11000));
             HashMap hs = new HashMap();
             hs.put("header", "connected");
             hs.put("user_name", Auth.user.getUser_name());

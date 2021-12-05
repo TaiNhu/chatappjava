@@ -744,12 +744,10 @@ public class ManHinhChinh extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
         try {
-            Client a = new Client(new Socket("14.183.98.48", 11000));
-            HashMap hs = new HashMap();
-            hs.put("header", "connected");
-            hs.put("user_name", Auth.user.getUser_name());
-            hs.put("room", last_room_clicked.id);
-            a.out1.writeObject(hs);
+            Client a = new Client(new Socket("localhost", 11000));
+            a.out.writeUTF("connected");
+            a.out.writeUTF(Auth.user.getUser_name());
+            a.out.writeUTF(String.valueOf(last_room_clicked.id));
             VideoCall i = new VideoCall(a, this);
             i.add_room_video_call(new RoomVideoCall(Auth.user.getUser_name()));
             i.run_video();

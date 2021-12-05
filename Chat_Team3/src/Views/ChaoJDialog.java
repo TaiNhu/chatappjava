@@ -35,7 +35,7 @@ public class ChaoJDialog extends javax.swing.JDialog {
         initComponents();
         setIconImage(XImage.getAppIcon());
         setTitle("BeeChat");
-        Client client = new Client(new Socket("14.183.98.48", 10000));
+        Client client = new Client(new Socket("localhost", 10000));
         Auth.setClient(client);
         new Thread(eventProgressBar(), "background").start();
         setLocationRelativeTo(parent);

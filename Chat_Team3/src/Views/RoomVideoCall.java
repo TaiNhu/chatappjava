@@ -27,6 +27,7 @@ public class RoomVideoCall extends javax.swing.JPanel {
     
     public void setImage(ImageIcon image, String user_name){
         if(this.user_name.equals(user_name)){
+            jLabel2.setIcon(null);
             Image i = image.getImage().getScaledInstance((int) ((155.0 / image.getIconHeight()) * image.getIconWidth()), 155, Image.SCALE_DEFAULT);
             jLabel2.setIcon(new ImageIcon(i));
         }

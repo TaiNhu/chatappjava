@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,8 +36,8 @@ public class VideoCall extends javax.swing.JFrame {
     ImageIcon ic;
     boolean is_connected = true;
     boolean run = true;
-    HashMap hs;
     ManHinhChinh parent;
+    ImageIcon cj;
 
     public VideoCall(Client c, ManHinhChinh parent) {
         initComponents();
@@ -46,17 +45,15 @@ public class VideoCall extends javax.swing.JFrame {
         this.c = c;
         cam = Webcam.getDefault();
         cam.open();
-        hs = new HashMap();
         setLocationRelativeTo(null);
         addWindowListener(new java.awt.event.WindowAdapter() {
-            
+
             public void windowClosing(WindowEvent winEvt) {
                 try {
                     is_connected = false;
                     run = false;
                     cam.close();
-                    hs.put("header", "disconnected");
-                    c.out1.writeObject(hs);
+                    c.out.writeUTF("disconnected");
                     c.client.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -64,7 +61,7 @@ public class VideoCall extends javax.swing.JFrame {
             }
         }
         );
-        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     public void add_room_video_call(RoomVideoCall v) {
@@ -77,19 +74,19 @@ public class VideoCall extends javax.swing.JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ImageIcon cj;
-                HashMap hs;
+                String hs;
                 while (is_connected) {
                     try {
-                        hs = (HashMap) c.in1.readObject();
-                        if (hs.get("header").equals("get_data")) {
+                        hs = c.in.readUTF();
+                        if (hs.equals("get_data")) {
+                            String user_name = c.in.readUTF();
+                            cj = (ImageIcon) c.in1.readObject();
                             for (RoomVideoCall r : user_in_call) {
-                                cj = (ImageIcon) hs.get("image");
-                                String user_name = (String) hs.get("user_name");
                                 r.setImage(cj, user_name);
                             }
-                        } else if (hs.get("header").equals("add_new_room")) {
-                            add_room_video_call(new RoomVideoCall((String) hs.get("user_name")));
+                        } else if (hs.equals("add_new_room")) {
+                            String user_name = c.in.readUTF();
+                            add_room_video_call(new RoomVideoCall(user_name));
                         }
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -102,18 +99,16 @@ public class VideoCall extends javax.swing.JFrame {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HashMap hs = new HashMap();
                 while (run) {
                     try {
                         br = cam.getImage();
-                        hs.put("header", "get_data");
-                        hs.put("user_name", Auth.user.getUser_name());
-                        hs.put("room", parent.last_room_clicked.id);
                         ic = new ImageIcon(br);
-                        hs.put("image", ic);
-                        c.out1.writeObject(hs);
                         br.flush();
-                        user_in_call.get(0).setImage(ic, Auth.user.getUser_name());
+                        c.out.writeUTF("get_data");
+                        c.out.writeUTF(Auth.user.getUser_name());
+                        c.out.writeUTF(String.valueOf(parent.last_room_clicked.id));
+                        c.out1.writeObject(ic);
+//                        user_in_call.get(0).setImage((ImageIcon) hs1.get("image"), Auth.user.getUser_name());
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

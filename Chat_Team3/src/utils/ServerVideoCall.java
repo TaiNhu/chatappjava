@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import static utils.Server.room;
 
 /**
@@ -38,8 +39,6 @@ public class ServerVideoCall {
     final static int PORT = 11000;
     static HashMap<Object, Object> room = new HashMap<Object, Object>();
     static int count = 0;
-    static HashMap header;
-    static HashMap a = new HashMap();
 
     /**
      * @param args the command line arguments
@@ -57,18 +56,19 @@ public class ServerVideoCall {
                     public void run() {
                         try {
                             boolean is_connected = true;
+                            String header = "";
+                            ImageIcon k;
                             while (is_connected) {
                                 try {
                                     while (true) {
-                                        header = (HashMap) socket.in1.readObject();
-                                        if (header != null) {
+                                        header = socket.in.readUTF();
+                                        if (!header.equals("")) {
                                             break;
                                         }
                                     }
                                 } catch (EOFException e) {
                                 }
-                                if (header.get("header").equals("disconnected")) {
-                                    System.out.println("tai");
+                                if (header.equals("disconnected")) {
                                     is_connected = false;
                                     count -= 1;
                                     for (Object t : room.keySet()) {
@@ -81,69 +81,45 @@ public class ServerVideoCall {
                                         }
                                     }
                                     socket.s.close();
-                                    header.clear();
-                                } else if (!header.get("header").equals("disconnected")) {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (header.get("header").equals("connected")) {
-                                                if (room.get(header.get("room")) == null) {
-                                                    ArrayList<SocketClone> clients = new ArrayList<SocketClone>();
-                                                    clients.add(socket);
-                                                    room.put(header.get("room"), clients);
-                                                } else {
-                                                    ArrayList<SocketClone> t = (ArrayList<SocketClone>) room.get(header.get("room"));
-                                                    t.add(socket);
-                                                }
-                                                for (SocketClone j : (ArrayList<SocketClone>) room.get(header.get("room"))) {
-                                                    if (!j.equals(socket)) {
-                                                        try {
-                                                            a.clear();
-                                                            a.put("header", "add_new_room");
-                                                            a.put("user_name", header.get("user_name"));
-                                                            j.out1.writeObject(a);
-                                                        } catch (IOException ex) {
-                                                            ex.printStackTrace();
-                                                        }
-                                                    }
-
-                                                }
-                                            } else if (header.get("header").equals("get_data")) {
-                                                HashMap data = header;
-                                                List<SocketClone> s = (List<SocketClone>) room.get(data.get("room"));
-                                                for (SocketClone j : s) {
-                                                    if (!j.equals(socket)) {
-                                                        try {
-                                                            a.clear();
-                                                            a.put("header", "get_data");
-                                                            a.put("user_name", data.get("user_name"));
-                                                            a.put("image", data.get("image"));
-                                                            j.out1.writeObject(a);
-                                                        } catch (IOException ex) {
-                                                            ex.printStackTrace();
-                                                        }
-                                                    }
-
-                                                }
+                                } else if (header.equals("connected")) {
+                                    String user_name = socket.in.readUTF();
+                                    int room1 = Integer.valueOf(socket.in.readUTF());
+                                    if (room.get(room1) == null) {
+                                        ArrayList<SocketClone> clients = new ArrayList<SocketClone>();
+                                        clients.add(socket);
+                                        room.put(room1, clients);
+                                    } else {
+                                        ArrayList<SocketClone> t = (ArrayList<SocketClone>) room.get(room1);
+                                        t.add(socket);
+                                    }
+                                    for (SocketClone j : (ArrayList<SocketClone>) room.get(room1)) {
+                                        System.out.println(((ArrayList) room.get(room1)).size());
+                                        if (!j.equals(socket)) {
+                                            try {
+                                                j.out.writeUTF("add_new_room");
+                                                j.out.writeUTF(user_name);
+                                            } catch (IOException ex) {
+                                                ex.printStackTrace();
                                             }
                                         }
-                                    }).start();
+                                    }
+                                } else if (header.equals("get_data")) {
+                                    String user_name = socket.in.readUTF();
+                                    int room1 = Integer.valueOf(socket.in.readUTF());
+                                    k = (ImageIcon) socket.in1.readObject();
+                                    List<SocketClone> s = (List<SocketClone>) room.get(room1);
+                                    for (SocketClone j : s) {
+                                        j.out.writeUTF("get_data");
+                                        j.out.writeUTF(user_name);
+                                        j.out1.writeObject(k);
+
+                                    }
                                 }
                             }
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         } catch (ClassNotFoundException ex) {
-                            ex.printStackTrace();
-                        } finally {
-                            try {
-                                socket.s.close();
-                                socket.in.close();
-                                socket.in1.close();
-                                socket.out.close();
-                                socket.out1.close();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
+                            Logger.getLogger(ServerVideoCall.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         System.out.println("[" + client_socket.getInetAddress() + " is disconnected...]");
                     }

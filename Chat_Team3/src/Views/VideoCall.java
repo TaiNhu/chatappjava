@@ -19,6 +19,7 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import utils.Auth;
 import utils.Client;
+import utils.SocketClone;
 
 /**
  *
@@ -81,12 +82,16 @@ public class VideoCall extends javax.swing.JFrame {
                         if (hs.equals("get_data")) {
                             String user_name = c.in.readUTF();
                             cj = (ImageIcon) c.in1.readObject();
-                            for (RoomVideoCall r : user_in_call) {
-                                r.setImage(cj, user_name);
-                            }
+                            user_in_call.get(1).setImage(cj, user_name);
+//                            c.in.reset();
+                            c.in1.reset();
                         } else if (hs.equals("add_new_room")) {
-                            String user_name = c.in.readUTF();
-                            add_room_video_call(new RoomVideoCall(user_name));
+                            String[] user_names = (String[]) c.in1.readObject();
+                            for (int i = 0; i < user_names.length; i++) {
+                                if (!user_in_call.get(0).user_name.equals(user_names[i])) {
+                                    add_room_video_call(new RoomVideoCall(user_names[i]));
+                                }
+                            }
                         }
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -108,7 +113,7 @@ public class VideoCall extends javax.swing.JFrame {
                         c.out.writeUTF(Auth.user.getUser_name());
                         c.out.writeUTF(String.valueOf(parent.last_room_clicked.id));
                         c.out1.writeObject(ic);
-//                        user_in_call.get(0).setImage((ImageIcon) hs1.get("image"), Auth.user.getUser_name());
+                        user_in_call.get(0).setImage(ic, Auth.user.getUser_name());
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

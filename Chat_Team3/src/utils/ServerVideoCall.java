@@ -58,6 +58,7 @@ public class ServerVideoCall {
                             boolean is_connected = true;
                             String header = "";
                             ImageIcon k;
+                            boolean run = false;
                             while (is_connected) {
                                 try {
                                     while (true) {
@@ -84,6 +85,7 @@ public class ServerVideoCall {
                                 } else if (header.equals("connected")) {
                                     String user_name = socket.in.readUTF();
                                     int room1 = Integer.valueOf(socket.in.readUTF());
+                                    socket.setName(user_name);
                                     if (room.get(room1) == null) {
                                         ArrayList<SocketClone> clients = new ArrayList<SocketClone>();
                                         clients.add(socket);
@@ -93,31 +95,44 @@ public class ServerVideoCall {
                                         t.add(socket);
                                     }
                                     for (SocketClone j : (ArrayList<SocketClone>) room.get(room1)) {
-                                        System.out.println(((ArrayList) room.get(room1)).size());
-                                        if (!j.equals(socket)) {
-                                            try {
-                                                j.out.writeUTF("add_new_room");
-                                                j.out.writeUTF(user_name);
-                                            } catch (IOException ex) {
-                                                ex.printStackTrace();
+                                        try {
+                                            j.out.writeUTF("add_new_room");
+                                            String[] names = new String[((ArrayList<SocketClone>) room.get(room1)).size()];
+                                            for (int i = 0; i < names.length; i++) {
+                                                names[i] = ((ArrayList<SocketClone>) room.get(room1)).get(i).user_name;
                                             }
+                                            j.out1.writeObject(names);
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
                                         }
                                     }
                                 } else if (header.equals("get_data")) {
                                     String user_name = socket.in.readUTF();
                                     int room1 = Integer.valueOf(socket.in.readUTF());
                                     k = (ImageIcon) socket.in1.readObject();
+                                    if (run) {
+                                        try{
+                                        socket.in1.reset();
+                                        } catch(Exception ex){
+                                            
+                                        }
+                                        run = false;
+                                    } else {
+                                        run = true;
+                                    }
                                     List<SocketClone> s = (List<SocketClone>) room.get(room1);
                                     for (SocketClone j : s) {
-                                        j.out.writeUTF("get_data");
-                                        j.out.writeUTF(user_name);
-                                        j.out1.writeObject(k);
-
+                                        if (!j.equals(socket)) {
+                                            j.out.writeUTF("get_data");
+                                            j.out.writeUTF(user_name);
+                                            j.out1.writeObject(k);
+                                        }
                                     }
                                 }
                             }
                         } catch (IOException ex) {
-                            ex.printStackTrace();
+//                            ex.printStackTrace();
+                            System.out.println("as");
                         } catch (ClassNotFoundException ex) {
                             Logger.getLogger(ServerVideoCall.class.getName()).log(Level.SEVERE, null, ex);
                         }

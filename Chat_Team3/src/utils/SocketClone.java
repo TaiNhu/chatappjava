@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,13 +19,14 @@ import java.util.logging.Logger;
  *
  * @author ACER
  */
-public class SocketClone {
+public class SocketClone implements Serializable{
 
     public DataOutputStream out;
     public DataInputStream in;
     public ObjectInputStream in1;
     public ObjectOutputStream out1;
     public Socket s;
+    public String user_name;
     
     
     public SocketClone(Socket s){
@@ -38,6 +40,10 @@ public class SocketClone {
         } catch (IOException ex) {
             Logger.getLogger(SocketClone.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void setName(String name){
+        this.user_name = name;
     }
 
 }
